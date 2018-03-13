@@ -1,0 +1,26 @@
+```{r data generation, echo = FALSE, results = "hide"}
+
+```
+
+Question
+========
+
+
+Answerlist
+----------
+
+
+Solution
+========
+
+
+Answerlist
+----------
+
+
+Meta-information
+================
+exname: ;;
+extype: mchoice
+exsolution: 
+exshuffle: 5

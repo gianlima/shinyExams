@@ -1,0 +1,31 @@
+```{r data generation, echo = FALSE, results = "hide"}
+dat <- matrix(c(
+  "lm",           "regressão de mínimos quadrados",
+  "glm",          "regressão de Poisson",
+  "glm",          "regressão logística",
+  "glm.nb",       "regressão binomial negativa",
+  "model.matrix", "extrair a matriz do regressor de um objeto de modelo linear (generalizado) ajustado",
+  "coef",         "extrair os coeficientes estimados de um objeto de modelo linear (generalizado) ajustado",
+  "vcov",         "extrair a matriz de covariância estimada de um objeto de modelo linear (generalizado) ajustado",
+  "logLik",       "extrair a probabilidade de log ajustada de um objeto de modelo linear (generalizado) ajustado"),
+  nrow = 2
+)
+i <- sample(1:ncol(dat), 1)
+fun <- dat[1, i]
+descr <- dat[2, i]
+```
+
+Question
+========
+Qual é o nome da função do R para `r descr`?
+
+Solution
+========
+``r fun`` é a função do R para `r descr`.
+Veja `?`r fun`` para a página correspondente do manual. 
+
+Meta-information
+================
+extype: string
+exsolution: `r fun`
+exname: Funções do R;;

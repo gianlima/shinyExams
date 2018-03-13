@@ -1,0 +1,190 @@
+```{r data generation, echo = FALSE, results = "hide"}
+## DATA GENERATION
+create_table <- function() {
+  city <- rmultinom(1, 100, prob=c(0.2, 0.4, 0.3, 0.1))
+  suburb <- rmultinom(1, 150, prob=c(0.1, 0.2, 0.4, 0.3))
+  matrix(c(city, suburb), nrow = 4,
+         dimnames = list(Evaluation = c("muito bom", "bom", "ruim", "muito ruim"),
+           Location = c("centro", "subúrbios")))
+}
+public <- create_table()
+variant <- sample(1:3, 1)
+margins <- list(1, 2, NULL)
+prop_public <- round(100*prop.table(public, margins[[variant]]), digits = 1) 
+
+while (length(prop_public) != length(unique(prop_public))) {
+  public <- create_table()
+  prop_public <- round(100*prop.table(public, margins[[variant]]), digits = 1) 
+}
+
+## QUESTION/ANSWER GENERATION
+questions <- character(5)
+solutions <- logical(5)
+explanations <- character(5)
+
+## 1. total/rows/columns percentage
+percentage <- c("de linha", "de coluna", "total")
+rowsums <- c("somas de linha", "somas de coluna", "somas totais")
+variant1 <- sample(1:3, 1)
+questions[1] <- paste("A tabela de porcentagem contém porcentagem  ",percentage[variant1],".")
+solutions[1] <- variant1 == variant
+explanations[1] <- if (variant1 == variant) paste("As ", rowsums[variant1], 
+                         " são aproximadamente iguais a 100 (exceto possíveis erros de arredondamento).") else 
+paste("As ", rowsums[variant1], "não resultam em 100.")
+
+## 2. interprete total/row/column percentage
+if (runif(1) > 0.5) {
+  questions[2] <- "A tabela de porcentagem dá a distribuição de localização para cada nível de satisfação."
+  solutions[2] <- variant == 1
+  explanations[2] <- if (solutions[2]) "As somas de linha dão 100 (exceto possíveis erros de arredondamento)." else 
+                     "As somas da linha não resultam em 100."
+} else {
+  questions[2] <- "A tabela de porcentagem dá a distribuição de satisfação para cada tipo de localização."
+  solutions[2] <- variant == 2
+  explanations[2] <- if (solutions[2]) "As somas da coluna resultam em 100 (exceto possíveis erros de arredondamento)." else 
+                     "As somas da coluna não resultam em 100."
+}
+
+## 3. Interpretation row percentage
+question <- sample(1:3, 1)
+if (question == 1) {
+  questions[3] <- if (runif(1) > 0.5) paste("O valor na linha 1 e na coluna 1 na tabela de porcentagem indica:", prop_public[1,1], 
+  "por cento daqueles, que avaliaram o transporte público como muito bom,",
+  "moram no centro da cidade.") else paste("O valor na linha 4 e na coluna 2 na tabela de porcentagem indica:", prop_public[4,2], 
+  "por cento daqueles, que avaliaram o transporte público como muito ruim,",
+  "moram nos subúrbios.")
+  solutions[3] <- variant == 1
+  explanations[3] <- if (solutions[3]) "Esta é a interpretação correta das porcentagens de linha." else 
+  paste("Esta é uma interpretação das porcentagens de linha, mas a tabela dá em ", 
+         "porcentagem ", percentage[variant],".")
+} else if (question == 2) {
+  questions[3] <- paste("O valor na linha 1 e na coluna 2 na tabela de porcentagem indica:", prop_public[1,2], 
+                        "porcento daqueles que vivem nos subúrbios avaliaram o transporte público ",
+                        "como muito bom.")
+  solutions[3] <- variant == 2
+  explanations[3] <- if (solutions[3]) "Esta é a interpretação correta das percentagens das colunas." else 
+  paste("Esta é uma interpretação das percentagens das colunas, mas a tabela resulta em ",  
+         "porcentuagem ", percentage[variant],".")
+} else {
+  questions[3] <- paste("O valor na linha 4 e na coluna 1 na tabela de porcentagem indica:", prop_public[4,1], 
+                         "por cento dos entrevistados vivem no centro da cidade e avaliaram o ",
+                        "transporte público como muito ruim.")
+  solutions[3] <- variant == 3
+  explanations[3] <- if (solutions[3]) "Esta é a interpretação correta das porcentagens totais." else 
+  paste("Esta é uma interpretação das percentagens totais, mas a tabela resulta em ", 
+     "porcentagem ", percentage[variant],".")
+} 
+
+## 4. Interpretation column percentages
+question <- sample(1:3, 1)
+if (question == 1) {
+  if (runif(1) > 0.5) {
+    questions[4] <- paste("O valor na linha 2 e na coluna 1 na tabela de porcentagem indica:", prop_public[2,1], 
+                          "por cento dos entrevistados no centro da cidade avaliaram o transporte público como bom.")
+  } else {
+    questions[4] <- paste("O valor na linha 3 e na coluna 2 na tabela de porcentagem indica:", prop_public[3,2], 
+                          "por cento dos entrevistados nos subúrbios avaliaram o transporte público ",
+                          "como ruim.")
+  } 
+  solutions[4] <- variant == 2
+  explanations[4] <- if (solutions[4]) "Esta é a interpretação correta das percentagens das colunas." 
+  else paste("Esta é uma interpretação das percentagens das colunas, mas a tabela resulta em ", 
+             "porcentagem ", percentage[variant],".")
+
+} else if (question == 2) {
+  questions[4] <- paste("O valor na linha 2 e na coluna 2 na tabela de porcentagem indica:", prop_public[2,2], 
+                        "por cento daqueles que avaliaram o transporte público como bom",
+                        "moram nos subúrbios.")
+  solutions[4] <- variant == 1
+  explanations[4] <- if (solutions[4]) "Esta é a interpretação correta da porcentagem da linha."
+  else paste("Esta é uma interpretação das porcentagens de linha, mas a tabela resulta em ", 
+             "porcentagens",percentage[variant],".")
+} else {
+  questions[4] <- paste("O valor na linha 3 e coluna 1 na tabela de porcentagem indica:", prop_public[3,1], 
+                        "por cento dos entrevistados moravam no centro da cidade e avaliaram",
+                        "o transporte público como ruim.")
+  solutions[4] <- variant == 3
+  explanations[4] <- if (solutions[4]) "Esta é a interpretação correta das porcentagens totais." else 
+  paste("Esta é uma interpretação das percentagens totais, mas a tabela resulta em ", "porcentagem ", percentage[variant],".")
+} 
+
+## 5. Calculation row/column percentages
+question <- sample(1:3, 1)
+if (question == 1) {
+  questions[5] <- paste("A tabela de porcentagem pode ser facilmente construída a partir da tabela de contingência original:",
+                        "as porcentagens são calculadas para cada linha.")
+  solutions[5] <- variant == 1
+  explanations[5] <- paste("Esta avaliação fornece porcentagens de linha.", ifelse(!solutions[5], paste("Mas a tabela resulta em porcentagem ", 
+                     percentage[variant]), ""))
+} else if (question == 2) {
+  questions[5] <- paste("A tabela de porcentagem pode ser facilmente construída a partir da tabela de contingência original:",
+                        "as porcentagens são calculadas para cada coluna.")
+  solutions[5] <- variant == 2
+  explanations[5] <- paste("Esta avaliação fornece porcentagens de coluna.", 
+                           ifelse(!solutions[5], paste("Mas a tabela resulta em porcentagem", 
+                     percentage[variant]), ""))
+} else {
+  questions[5] <- paste("A tabela de porcentagem pode ser facilmente construída a partir da tabela de contingência original:",
+                        "Cada valor está relacionado ao tamanho total da amostra.")
+  solutions[5] <- variant == 3
+  explanations[5] <- paste("Esta avaliação dá porcentagens totais.", 
+                           ifelse(!solutions[5], paste("Mas a tabela resulta em porcentagem ", 
+                     percentage[variant],"."), ""))
+} 
+
+## permute order of solutions/questions
+o <- sample(1:5)
+questions <- questions[o]
+solutions <- solutions[o]
+explanations <- explanations[o]
+```
+
+Question
+========
+
+Em uma cidade pequena, é avaliada a satisfação com o transporte público local. Uma questão de interesse é se os habitantes do centro da cidade estão mais satisfeitos com o transporte público em comparação com aqueles que vivem nos subúrbios.
+
+Uma pesquisa com 250 entrevistados resultou a seguinte tabela de contingência:
+
+```{r, echo = FALSE, comment = NA}
+public
+```
+
+A seguinte tabela de porcentagem foi construída:
+
+```{r, echo = FALSE, comment = NA}
+print(format(prop_public, nsmall = 1, justify = "right", 
+             width = max(nchar(colnames(prop_public)))), quote = FALSE)
+```
+
+Quais das seguintes afirmações são corretas?
+
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(questions, markup = "markdown")
+```
+
+
+Solution
+========
+
+```{r, echo = FALSE}
+interpretation <- c("proporções condicionais para localização dado nível de satisfação",
+                    "proporções condicionais para o nível de satisfação dado o tipo de localização.",
+                    "as proporções para cada tipo de localização e nível de satisfação.")
+```
+
+Na tabela de porcentagem, as `r rowsums[variant]` são cerca de 100 (exceto possíveis erros de arredondamento). Assim, a tabela fornece
+porcentagem `r percentage[variant]`, ou seja,
+`r interpretation[variant]`
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(
+  ifelse(solutions, "Verdadeiro", "Falso"),
+  explanations, markup = "markdown")
+```
+
+Meta-information
+================
+extype: mchoice
+exsolution: `r mchoice2string(solutions)`
+exname: Frequências relativas de uma pesquisa de satisfação com o transporte público local comparando habitantes do centro da cidade e subúrbios;;

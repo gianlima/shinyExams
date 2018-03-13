@@ -1,0 +1,41 @@
+```{r, echo = FALSE, results = "hide"}
+include_supplement("Rlogo.png",
+  dir = find.package("exams"), recursive = TRUE)
+```
+
+Question
+========
+O que significa o seguinte logotipo?
+\
+![](Rlogo.png)
+
+Answerlist
+----------
+* Linguagem de programação
+* Letra no alfabeto
+* Empresa de tecnologia
+* Mecanismo de busca
+* Varejista online
+* Palavra pirata
+
+
+Solution
+========
+O logotipo representa o sistema R para computação estatística e gráficos (<http://www.R-project.org/>).
+
+Answerlist
+----------
+* Verdadeiro. R é uma linguagem de programação.
+* Falso. Embora R seja (também) uma letra no alfabeto, isso não é o que o logotipo representa.
+* Falso. R é um projeto de código aberto, não uma empresa.
+* Falso. R não é um mecanismo de busca.
+* Falso. O projeto R não vende nada.
+* Falso. Geralmente é escrito _Arrr!_.
+
+
+Meta-information
+================
+exname: Significado do logotipo do R com apenas uma alternativa correta;; 
+extype: schoice
+exsolution: 100000
+exshuffle: 5

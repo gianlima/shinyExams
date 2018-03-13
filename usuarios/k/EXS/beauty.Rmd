@@ -1,0 +1,37 @@
+```{r data generation, echo = FALSE, results = "hide"}
+
+```
+
+Question
+========
+Qual e a sede das autoridades federais na Suica (ou seja, a capital de fato)?
+
+Answerlist
+----------
+* Basileia
+* Geneva 
+* Lausana 
+* Zurique 
+* Sao Galo
+* Vaduz
+
+Solution
+========
+Nao ha capital de jure, mas a capital de facto e a sede das autoridades federais sao em Berna.
+
+Answerlist
+----------
+* Falso
+* Falso
+* Verdadeiro
+* Falso
+* Falso
+* Falso
+
+
+Meta-information
+================
+exname: capital de fato da Suica, apenas uma resposta correta;;
+extype: schoice
+exsolution: 001000
+exshuffle: 6

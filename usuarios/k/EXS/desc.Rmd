@@ -1,0 +1,39 @@
+```{r data generation, echo = FALSE, results = "hide"}
+
+```
+
+Question
+========
+Considerando as seguintes variáveis, marque as opções verddeiras.
+
+
+
+Answerlist
+----------
+* Ocorrência de hipertensão pré-natal em grávidas com mais de 35 anos (sim ou não são possíveis respostas para esta variável).
+* Intenção de voto para presidente (possíveis respostas são os nomes dos candidados, além de não sei).
+* Perda de peso de maratonistas na Corrida de São Silvestre, em quilos.
+* Intensidade da perda de peso de maratonistas na Corrida de São Silvestre (leve, moderada, forte).
+* Grau de satistifação da população brasileira com relação ao trabalho de seu presidente ( valores de 0 a 5, com 0 indicando totalmente insatisfeito e 5 totalmente satisfeito).
+* Número de dias na fila para uma consulta em um posto de saúde de uma grande capital.
+
+Solution
+========
+
+
+Answerlist
+----------
+* Verdadeiro
+* Falso
+* Verdadeiro
+* Falso
+* Verdadeiro
+* Falso
+
+
+Meta-information
+================
+exname: Identifição de variáveis;;
+extype: mchoice
+exsolution: 101010
+exshuffle: 5

@@ -1,0 +1,79 @@
+```{r data generation, echo = FALSE, results = "hide"}
+## regression parameters
+n <- sample(40:90, 1)
+b <- sample(c(-1, 1), 1) * runif(1, 1, 2) * sample(c(0.1, 0.5, 1), 1)
+s <- sample(c(0.5, 1, 2), 1)
+
+## data and regression
+d <- data.frame(
+  x = rnorm(n),
+  err = rnorm(n, sd = s)
+)
+d$y <- 0 + b * d$x + d$err
+
+## different types
+type <- sample(c("linear", "semilogarítmica", "log-log"), 1)
+if(type == "linear") {
+  m <- lm(y ~ x, data = d)
+  xunit <- "unidade" 
+  yunit <- "unidades"
+  eff <- round(coef(m)[2], digits = 2)
+} else if(type == "semilogarítmica") {
+  d$y <- exp(d$y)
+  m <- lm(log(y) ~ x, data = d)
+  xunit <- "unidade" 
+  yunit <- "porcento"
+  eff <- round(100 * exp(coef(m)[2]) - 100, digits = 2)
+} else if(type == "log-log") {
+  d$y <- exp(d$y)
+  d$x <- exp(d$x)
+  m <- lm(log(y) ~ log(x), data = d)
+  xunit <- "porcento" 
+  yunit <- "porcento"
+  eff <- round(100 * exp(0.01 * coef(m)[2]) - 100, digits = 2)
+}
+
+## summaries
+direct <- if(coef(m)[2] > 0) "aumenta" else "diminui"
+if(summary(m)$coefficients[2, 4] < 0.05) {
+  sign1 <- "Também"
+  sign2 <- ""
+} else {
+  sign1 <- "Porém,"
+  sign2 <- "_não_"
+}
+```
+
+Question
+========
+Considere os seguintes resultados de regressão:
+
+```{r lm output, echo = FALSE, comment = NA}
+summary(m)
+```
+
+Descreva como a variável resposta `y` depende da variável regressora `x`.
+
+
+Solution
+========
+Os resultados apresentados descrevem uma regressão `r type`.
+
+A média da variável resposta `y` `r direct` com o aumento de `x`.
+
+Se `x` aumenta em 1 `r xunit` então uma mudança de `y` por aproximadamente `r eff` `r yunit` pode ser esperada.
+
+`r sign1`, o efeito de `x` `r sign2` é  significativo no nível de 5 por cento.
+
+
+Meta-information
+================
+extype: string
+exsolution: nil
+exname: exercício variando o tipo de regressão linear, semilogarítmica ou log-log;;
+exextra[essay,logical]: TRUE
+exextra[essay_format,character]: editor
+exextra[essay_required,logical]: FALSE
+exextra[essay_fieldlines,numeric]: 5
+exextra[essay_attachments,numeric]: 1
+exextra[essay_attachmentsrequired,logical]: FALSE

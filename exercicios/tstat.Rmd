@@ -1,0 +1,41 @@
+```{r data generation, echo = FALSE, results = "hide"}
+n <- sample(120:250, 1)
+mu <- sample(c(125, 200, 250, 500, 1000), 1)
+y <- rnorm(n,
+  mean = mu * runif(1, min = 0.9, max = 1.1), 
+  sd = mu * runif(1, min = 0.02, max = 0.06)
+)
+Mean <- round(mean(y), digits = 1)
+Var <- round(var(y), digits = 2)
+tstat <- round((Mean - mu)/sqrt(Var/n), digits = 3)
+```
+
+Question
+========
+Uma máquina produz embalagens de leite com `r mu`ml. Suspeita-se de que a máquina não esteja funcionando corretamente e que a quantidade de leite preenchida é diferente do ponto de ajuste $\mu_0 = `r mu`$. Uma amostra de $`r n`$ embalagens 
+produzidas pela máquina é coletada. A média da amostra $\bar{y}$ é igual a 
+`r Mean` e a variância da amostra $s^2_{n-1}$ é igual a 
+`r Var`.
+
+Teste a hipótese de que a quantidade preenchida corresponde, em média, ao
+ponto de ajuste. Qual é o valor absoluto da estatística de teste t?
+
+Solution
+=========
+A estatística do teste t é calculada por:
+$$
+\begin{aligned}
+  t = \frac{\bar y - \mu_0}{\sqrt{\frac{s^2_{n-1}}{n}}}
+    = \frac{`r Mean` - `r mu`}{\sqrt{\frac{`r Var`}{`r n`}}}
+    = `r tstat`.
+\end{aligned}
+$$
+O valor absoluto da estatística de teste t é igual a
+`r fmt(abs(tstat), 3)`.
+
+Meta-information
+================
+extype: num
+exsolution: `r fmt(abs(tstat), 3)`
+exname: teste t de embalagens de leite com resposta numérica única;;
+extol: 0.01

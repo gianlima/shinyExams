@@ -1,0 +1,36 @@
+Question
+========
+Sob as suposições do teorema de Gauss-Markov, os erros
+de um modelo de regressão linear precisam ser:
+
+Answerlist
+----------
+* independentes
+* não correlacionados
+* distribuídos normalmente
+* distribuídos de forma idêntica
+* homocedásticos
+* zero
+
+
+Solution
+========
+Sob as suposições do teorema de Gauss-Markov, os erros
+de um modelo de regressão linear precisam ser não correlacionados, homocedásticos, e com média zero.
+
+Answerlist
+----------
+* Falso. Independência não é suposta, apenas falta de correlação.
+* Verdadeiro. Os erros precisam ser não correlacionados.
+* Falso. Nenhuma suposição de distribuição é necessária.
+* Falso. Nenhuma suposição de distribuição é necessária.
+* Verdadeiro. Os erros precisam ser homoscedásticos com variância finita.
+* Falso. Somente suas expectativas condicionais precisam ser zero.
+
+
+Meta-information
+================
+exname: Suposições de Gauss-Markov;;
+extype: mchoice
+exsolution: 010010
+exshuffle: 5

@@ -1,0 +1,118 @@
+```{r data generation, echo = FALSE, results = "hide"}
+## DATA GENERATION
+n <- 9 + sample(1:6, 4)
+dat <- data.frame(Evaluation = rnorm(sum(n),
+                                     mean = rep(sample(seq(from = sample(25:55, 1), by = 1, length.out = sample(15:20, 1)), 4)/10, n),
+                                     sd = rep(sample(70:80, 4)/100, n)),
+                  Occupation = factor(rep(1:4, n),
+                                      labels = c("Estudante", "Empregado", "Autônomo", "Aposentado")))
+dat$Evaluation[dat$Evaluation > 10] <- 10
+dat$Evaluation[dat$Evaluation <  0] <-  0
+
+## QUESTION/ANSWER GENERATION
+questions <- character(5)
+solutions <- logical(5)
+explanations <- character(5)
+
+fm0 <- lm(Evaluation ~ 1, data = dat)
+fm1 <- lm(Evaluation ~ Occupation, data = dat)
+myanova <- anova(fm0, fm1)
+myanova_print <- matrix(nrow = 2, ncol = 6)
+dimnames(myanova_print) <- dimnames(myanova)
+myanova_print[, 1] <- round(myanova[, 1])
+myanova_print[, 3] <- fmt(myanova[, 3], 0)
+rss <- round(myanova[,2], digits = max(0, min(3, 5-max(nchar(round(myanova[, 2], digits = 0))))))
+myanova_print[, 2] <- format(rss, nsmall = max(0, min(3, 5-max(nchar(round(myanova[, 2], digits = 0))))))
+myanova_print[2, 4] <- format(-diff(rss), nsmall = max(0, min(3, 5-max(nchar(round(myanova[, 2], digits = 0))))))
+myanova_print[1, 3:6] <- ""
+myanova_print[2, 5] <- round(myanova[2, 5], digits = 3)
+myanova_print[2, 6] <- format.pval(myanova[2, 6])
+r2 <- 1 - as.numeric(rss[2])/as.numeric(rss[1])
+
+f2 <- sample(10:250, 1)/10
+if(runif(1) > 0.5) {
+  questions[1] <- paste0("A estatística do teste é menor do que $", f2, "$.", sep = "")
+  solutions[1] <- myanova[2,5] < f2
+  explanations[1] <- paste0("A estatística do teste é $F = ", fmt(myanova[2,5], 3),
+                            "$ e, portanto ", ifelse(solutions[1], "", "_não_"), " é menor do que $", f2, "$.", sep = "")
+} else {
+  questions[1] <- paste0("A estatística do teste é maior do que $", f2, "$.", sep = "")
+  solutions[1] <- myanova[2,5] > f2
+  explanations[1] <- paste0("A estatística do teste é $F = ", fmt(myanova[2,5], 3), 
+                            "$ e, portanto ", ifelse(solutions[1], "", "_não_"), " é maior do que $", f2, "$.", sep = "")
+}
+
+questions[2] <- "Uma alternativa unilateral foi testada para aos valores da média."
+solutions[2] <- FALSE
+explanations[2] <- paste("A ANOVA sempre testa a hipótese nula,",
+                         "de que todos os valores da média são iguais, ao contrário da hipótese alternativa de que os valores da média são diferentes.")
+
+r2a <- sample(10:60, 1)/100
+questions[3] <- paste0("A fração da variância explicada é maior do que $", 100 * r2a, "$%.", sep = "")
+solutions[3] <- r2 > r2a
+explanations[3] <- paste0("A fração da variância explicada é $", fmt(r2, 3), 
+                          "$ e, portanto ", ifelse(solutions[3], "", "_não_"), " é maior do que ", r2a, ".", sep = "")
+
+questions[4] <- paste("Pode ser mostrado que a avaliação dos entrevistados depende de suas profissões.",
+                      "(Nível de significância
+                      $5$%)")
+solutions[4] <- myanova[2,6] < 0.05
+explanations[4] <- paste0("O $p$ valor é $", format.pval(myanova[2,6], digits = 3),
+                          "$ e, portanto", ifelse(solutions[4], "", "_não_"),
+                          " é significante. ", ifelse(solutions[4], "Pode ", "_Não_ pode "),
+                          " ser mostrado que as avaliações diferem em relação à profissão dos entrevistados.")
+
+r2b <- sample(10:60, 1)/100
+questions[5] <- paste0("A fração da variância explicada é menor do que $", 100 * r2b, "$%.", sep = "")
+solutions[5] <- r2 < r2b
+explanations[5] <- paste0("A fração da variância explicada é $", fmt(r2, 3), 
+                          "$ e, portanto ", ifelse(solutions[5], "", "_não_"), " é menor do que ", r2b, ".", sep = "")
+
+## permute order of solutions/questions
+o <- sample(1:5)
+questions <- questions[o]
+solutions <- solutions[o]
+explanations <- explanations[o]
+```
+
+Question
+========
+  Uma pesquisa com `r sum (n)` pessoas foi conduzida para analisar a aparência de uma campanha publicitária. Foi pedido para que cada entrevistado dê sua opinião geral sobre o anúncio em um escala de onze pontos de 0 (ruim) para 10 (bom). As avaliações estão resumidas separadamente em relação à profissão dos
+entrevistados na figura a seguir.
+\
+```{r boxplots, echo = FALSE, results = "hide", fig.height = 3.5, fig.width = 5.8, fig.path = "", fig.cap = ""}
+par(mar = c(4, 4, 1, 1))
+plot(Evaluation ~ Occupation, data = dat, xlab = "Profissão", ylab="Avaliação")
+```
+
+Para analisar a influência da profissão na avaliação do
+anúncio, foi realizada uma análise de variância:
+  
+  ```{r anova output, echo = FALSE, comment = NA}
+options(show.signif.stars = FALSE)
+print(myanova_print, quote = FALSE, right = TRUE)
+```
+
+Quais das seguintes afirmações são corretas?
+
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(questions, markup = "markdown")
+```
+
+Solution
+========
+  Para poder responder as questões, a fração da variância explicada deve ser determinada. A soma residual de quadrados quando se usa apenas um único valor médio ($\mathit{RSS}_0$), assim como a soma residual de quadrados ao permitir diferentes valores da média dada a profissão ($\mathit{RSS}_1$) são necessários. Ambos são fornecidos na coluna RSS da tabela ANOVA.  A fração da variância explicada é dada por
+$1 - \mathit{RSS}_1/\mathit{RSS}_0 = 1 - `r rss[2]`/`r rss[1]` =
+  `r round(r2, digits = 3)`$.
+
+As afirmações acima podem agora ser avaliadas como corretas ou erradas.
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(ifelse(solutions, "Verdadeiro", "Falso"), explanations, markup = "markdown")
+```
+
+Meta-information
+================
+extype: mchoice
+exsolution: `r mchoice2string(solutions)`
+exname: Análise de variância/ com alternativas/ mais de uma verdadeira/ pesquisa de aparência publicitária;;

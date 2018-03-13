@@ -1,0 +1,82 @@
+```{r data generation, echo = FALSE, results = "hide"}
+## data
+n <- 40 + sample(1:12, 2) * 3
+Waiting <- rnorm(sum(n), sd = sample(30:40, 1)/10) + rep(sample(30:80, 2)/10, n)
+Waiting[Waiting < 0] <- 0
+dat <- data.frame(
+  Waiting = Waiting,
+  Supermarket = factor(rep(1:2, c(n[1], n[2])), levels = 1:2, labels = c("Sparag", "Consumo"))
+)
+
+## questions/answer
+questions <- character(5)
+solutions <- logical(5)
+explanations <- character(5)
+
+tt <- t.test(Waiting ~ Supermarket, data = dat, var.equal = TRUE,
+  alternative = sample(c("less", "greater", "two.sided"), 1))
+
+questions[1] <- "O valor absoluto da estatística do teste é maior do que 1,96."
+solutions[1] <- abs(tt$statistic) > 1.96
+explanations[1] <- paste("O valor absoluto da estatística do teste é igual a ", 
+  round(abs(tt$statistic), digits = 3), ".", sep = "")
+
+questions[2] <- "Uma alternativa unilateral foi testada."
+solutions[2] <- tt$alternative != "two.sided"
+explanations[2] <- paste("O teste visa mostrar que a diferença de média é ",
+  switch(tt$alternative, "two.sided" = "desigual para", "less" = "menor que", 
+  "greater" = "maior que"), "0.")
+
+questions[3] <- "O valor p é maior do que 0.05."
+solutions[3] <- tt$p.value > 0.05
+explanations[3] <- paste("O p-valor é igual a ", format.pval(tt$p.value, digits = 3),
+  ".", sep = "")
+
+questions[4] <- paste("O teste mostra que o tempo de espera é maior em Sparag ",
+  "do que em Consumo.")
+solutions[4] <- tt$p.value < 0.05 & tt$alternative != "less" & diff(tt$estimate) < 0
+explanations[4] <- if (solutions[4]) paste("O resultado do teste é significativo ($p < 0.05$)",
+  "e, portanto, a alternativa é mostrada que a diferença de média é",
+  ifelse(tt$alternative == "two.sided", "desigual para ", "maior que"), "0.") else 
+  paste(ifelse(tt$alternative != "less", "", paste("O teste visa mostrar",
+  "que a alternativa de que o tempo de espera seja menor em Sparag do que em Consumo.")),
+  ifelse(tt$p.value < 0.05, "", "The test result is not significant ($p \\ge 0.05$)."))
+
+questions[5] <- paste("O teste mostra que o tempo de espera é menor em Sparag do que em Consumo.")
+solutions[5] <- tt$p.value < 0.05 & tt$alternative != "greater" & diff(tt$estimate) > 0
+explanations[5] <- if (solutions[5]) paste("O resultado do teste é significativo ($p < 0.05$)",
+  "e, portanto, a alternativa é mostrada que a diferença de média é",
+  ifelse(tt$alternative == "two.sided", "desigual para", "menor que"),
+  "0.") else paste(ifelse(tt$alternative != "greater", "", 
+  paste("O teste visa mostrar que o tempo de espera em Sparag é maior que em Consumo.")),
+  ifelse(tt$p.value < 0.05, "", "O resultado do teste não é significativo ($p \\ge 0.05$)."))
+```
+
+Question
+========
+
+O tempo de espera (em minutos) no caixa de duas redes de supermercados com diferentes sistemas de caixa é comparado. O seguinte
+teste estatístico foi realizado:
+
+```{r test output, echo = FALSE, comment = NA}
+print(tt)
+```
+
+Quais das seguintes afirmações são corretas? (Nível de significância 5%)
+
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(questions, markup = "markdown")
+```
+
+Solution
+========
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(ifelse(solutions, "Verdadeiro", "Falso"), explanations, markup = "markdown")
+```
+
+Meta-information
+================
+extype: mchoice
+exsolution: `r mchoice2string(solutions)`
+exname: teste-t com 2 amostras analisando tempo de espera de duas redes de supermercados;;

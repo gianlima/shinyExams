@@ -1,0 +1,30 @@
+Question
+========
+Qual das seguintes afirmações sobre a Suíça é/são correta(s)?
+
+Answerlist
+----------
+* Zurique é a capital da Suíça.
+* Italiano é uma língua oficial na Suíça.
+* A moeda na Suíça é o euro.
+* A Suíça faz parte da União Européia (UE).
+* O feriado nacional da Suíça é 1 de agosto.
+
+Solution
+========
+Esta é a solução
+
+Answerlist
+----------
+* Falso. Não há capital de jure, mas a capital de fato da Suíça é Berna. 
+* Verdadeiro. As línguas oficiais são: alemão, francês, italiano, romanche.
+* Falso. A moeda é o Franco Suíço (CHF).
+* Falso. A Suíça faz parte da área Schengen, mas não da UE.
+* Verdadeiro. O estabelecimento da Confederação Suíça é tradicionalmente datado de 1 de agosto de 1291.
+
+Meta-information
+================
+exname: afirmações sobre o a Suíça com alternativas de verdadeiro ou falso;;
+extype: mchoice
+exsolution: 01001
+exshuffle: 5

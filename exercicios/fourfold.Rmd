@@ -1,0 +1,78 @@
+```{r data generation, echo = FALSE, results = "hide"}
+ok <- FALSE
+while(!ok) {
+  pe <- round(runif(1, 0.05, 0.15), digits = 2)
+  per <- round(runif(1, 0.6, 0.8), digits = 2)
+  pnenr <- round(runif(1, 0.6, 0.8), digits = 2)
+
+  prob1 <- pe * per
+  prob2 <- pe * (1 - per)
+  prob3 <- (1 - pe) * (1 - pnenr)
+  prob4 <- (1 - pe) * pnenr
+
+  tab <- cbind(c(prob1, prob3), c(prob2, prob4))
+
+  sol <- c(tab[1, 1] / sum(tab[, 1]), tab[1, 1] / sum(tab[1, ]),
+    tab[2, 1] / sum(tab[2, ]), tab[1, 2] / sum(tab[1, ]))
+
+  ok <- sum(tab) == 1 & all(tab > 0) & all(tab < 1)
+}
+
+tab2 <- cbind(rbind(tab, colSums(tab)), c(rowSums(tab), 1))
+tab2 <- format(tab2 * 100, digits = 2, nsmall = 2, trim = TRUE)
+tab2 <- gsub(" ", "", tab2, fixed = TRUE)
+
+sol <- round(100 * as.vector(tab), digits = 2)
+lab <- c("E \\cap R", "\\overline{E} \\cap R", "E \\cap \\overline{R}", "\\overline{E} \\cap \\overline{R}")
+```
+
+
+Question
+========
+
+Uma empresa líder da indústria busca um candidato qualificado para um cargo de gerência.
+Uma consultoria de gestão realiza um centro de avaliação que conclui em fazer
+uma recomendação positiva ou negativa para cada candidato: das avaliações anteriores, eles sabem que dos candidatos que são realmente qualificados para o cargo (evento $E$), $`r per * 100`\%$
+têm uma recomendação positiva (evento $R$). No entanto, dos candidatos que não são qualificados,
+$`r pnenr * 100`\%$ têm uma recomendação negativa. Em geral, eles sabem que apenas
+$`r pe * 100`\%$ de todos os candidatos ao emprego são realmente qualificados.
+
+Qual é a tabela de contingência correspondente das probabilidades conjuntas? (Especifique todas as entradas em porcentagem.)
+
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(paste("$P(", lab, ")$", sep = ""), markup = "markdown")
+```
+
+
+Solution
+========
+
+Usando as informações do texto, podemos calcular diretamente as seguintes probabilidades conjuntas:
+$$
+\begin{aligned}
+  P(E \cap R) & =
+    P(R | E) \cdot P(E) = `r per` \cdot `r pe` = `r prob1` = `r 100 * prob1`\%\\
+  P(\overline{E} \cap \overline{R}) & =
+    P(\overline{R} | \overline{E}) \cdot P(\overline{E}) = `r pnenr` \cdot `r 1 - pe` = `r prob4` = `r 100 * prob4`\%.
+\end{aligned}
+$$
+As probabilidades remanescentes podem então ser encontradas calculando somas e diferenças na tabela:
+
+|               | $R$                | $\overline{R}$     | soma                |
+|:-------------:|:------------------:|:------------------:|:------------------:|
+|$E$            | **`r tab2[1, 1]`** |  _`r tab2[1, 2]`_  | **`r tab2[1, 3]`** |
+|$\overline{E}$ |  _`r tab2[2, 1]`_  | **`r tab2[2, 2]`** |  _`r tab2[2, 3]`_  |
+|soma            |  _`r tab2[3, 1]`_  |  _`r tab2[3, 2]`_  | **`r tab2[3, 3]`** |
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(paste("$P(", lab, ") = ", format(sol), "\\%$", sep = ""), markup = "markdown")
+```
+
+
+Meta-information
+================
+extype: cloze
+exsolution: `r paste(sol, collapse = "|")`
+exclozetype: num|num|num|num
+exname: tabela de contingência envolvendo probabilidade
+extol: 0.05

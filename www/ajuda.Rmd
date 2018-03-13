@@ -1,0 +1,85 @@
+---
+title: "Como criar questões"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Código R
+
+Campo opcional. Incluir código R normalmente, criar variáveis para utilizar no enunciado da questão, alternativas ou solução. 
+
+**Exemplo:**
+
+```{r eval = FALSE}
+num <- sample(1:10, size = 10, replace = TRUE)
+```
+
+### Questão
+
+Campo obrigatório. Criar o enunciado da questão. É possível adicionar código R ou LaTeX. 
+
+### Alternativas 
+
+Inserir as alternativas da questão. Cada alternativa deverá estar numa linha separada com o símbolo # na frente.  
+Obs.: É possível inserir mais de uma alternativa correta.    
+
+*Exemplo:*
+
+```{r}
+# alternativa 1
+# alternativa 2
+# alternativa 3
+# alternativa 4
+# alternativa 5
+```
+
+### Alternativas corretas
+
+Baseado nas alternativas inseridas no campo anterior, escreva a posição da alternativa correta. É possível inserir mais de uma alternativa correta.
+
+**Exemplo 1:** 2ª alternativa está correta. Insira: 2   
+**Exemplo 2:** 2ª e 3ª alternativas estão corretas. Insira: 2,3
+
+###Quantas alternativas mostrar
+
+É possível criar várias alternativas, porém não mostrar todas.  
+
+**Exemplo:** Criar 7 alternativas, sendo 1 verdadeira e 6 falsas. E mostrar apenas 5 para o aluno. Ou seja, será sempre selecionado a alternativa correta e será mostrado aleatoriamente 4 das 6 alternativas falsas.
+
+### Visualizar solução
+
+Há 2 opções nesse campo:
+1ª *Indicar apenas como verdadeiro ou falso*, ou seja, a questão mostrará qual alternativa é verdadeira ou falsa, porém não conterá uma justificativa junto as alternativas.
+
+2ª *Personalizar com alternativas comentadas*, ou seja, será inserido manualmente se cada alternativa é verdadeira ou falsa e junto com cada alternativa terá sua justificativa.
+
+**Exemplo:**
+
+```{r}
+# Verdadeiro. Curitiba é a capital do Paraná.
+# Falso. Salvador não é a capital do Paraná, é a capital da Bahia.
+# Falso. Belém não é a capital do Paraná, é a capital do Pará.
+# Falso. Paris não é uma cidade brasileira.
+```
+
+### Descrição simples do exercício
+
+Essa descrição será usada para relembrar o assunto principal da questão antes de inserir no exame
+
+### Comentário sobre a questão
+
+É possível inserir a solução num campo diferente da solução das alternativas (campo visualizar questão, 2ª opção).
+
+### Nome do arquivo
+
+Inserir apenas o nome, sem nenhuma extensão. Não inserir algum nome dos exercícios que você já criou ou dos exercícios inclusos no sistema.  
+
+
+
+
+
+
+

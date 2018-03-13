@@ -1,0 +1,121 @@
+```{r data generation, echo = FALSE, results = "hide"}
+## DATA GENERATION
+r <- sample(c(-0.97, 0, 0.5, 0.97), 1)
+if(runif(1) < 1/3) {
+  mx <- my <- 0
+  sx <- sy <- 1
+} else {
+  mx <- sample(10 * -5:5, 1)
+  my <- sample(20 * 0:5, 1)
+  sx <- sample(c(1, 10, 20), 1)
+  sy <- sample(c(1, 10, 20), 1)
+}
+
+b <- r * sy/sx
+a <- my - b*mx
+x <- rnorm(200, mx, sx)
+y <- b * x + rnorm(200, a, sy * sqrt(1- r^2))
+
+## QUESTION/ANSWER GENERATION
+questions <- character(5)
+solutions <- logical(5)
+explanations <- character(5)
+
+if (runif(1) < 0.5) {
+  questions[1] <- "O gráfico de dispersão é padronizado."
+  solutions[1] <- mx == 0 & my == 0 & sx == 1 & sy == 1
+  explanations[1] <- if (solutions[1]) "$X$ e $Y$ tem ambos média $0$ e variância $1$." else 
+  "O gráfico de dispersão não é padronizado, porque $X$ e $Y$ não tem ambos média $0$ e variância $1$."
+} else {
+  questions[1] <- "A inclinação da linha de regressão é aproximadamente $1$."
+  solutions[1] <- abs(b - 1) < 0.1
+  explanations[1] <- paste("A inclinação da linha de regressão é dada por $r \\cdot s_y/s_x$ e portanto",
+                           ifelse(abs(b - 1) < 0.1, "", "não é"), "aproximadamente igual a $1$.")
+}
+
+if (runif(1) < 0.5) {
+  questions[2] <- "O valor absoluto do coeficiente de correlação é pelo menos $0.8$."
+  solutions[2] <- abs(r) >= 0.8
+} else {
+  questions[2] <- "O valor absoluto do coeficiente de correlação é no máximo $0.8$."
+  solutions[2] <- abs(r) <= 0.8
+}
+explanations[2] <- if(abs(r) >= 0.9) {
+  paste("Uma forte associação entre as variáveis é dada no gráfico de dispersão.",
+        "Portanto, o valor absoluto do coeficiente de correlação é próximo de $1$",
+        "e, portanto, maior do que $0.8$.") 
+  } else if (abs(r) == 0) {
+    paste("Nenhuma associação entre as variáveis é observada no gráfico de dispersão.",
+          "Isto implica um coeficiente de correlação próximo de $0$.") 
+  } else paste("Apenas uma associação ligeiramente positiva entre as variáveis é observável no gráfico de dispersão.",
+               "Isso implica um coeficiente de correlação com um valor absoluto menor do que $0.8$.")
+
+if (runif(1) < 0.5) {
+  questions[3] <- "O desvio padrão de $X$ é pelo menos $6$."
+  solutions[3] <- sx >= 6
+  explanations[3] <- paste0("O desvio padrão de $X$ é igual a $", sx, "$ e é, portanto, ",
+                           ifelse(sx < 6, "menor", "maior"), " do que $6$.")
+} else {
+  questions[3] <- "O desvio padrão de $Y$ é pelo menos $6$."
+  solutions[3] <- sy >= 6
+  explanations[3] <- paste0("O desvio padrão de $Y$ é igual a $", sy, "$ e é, portanto, ",
+                           ifelse(sy < 6, "menor", "maior"), " do que $6$.")
+}
+
+if (runif(1) < 0.5) {
+  questions[4] <- "A média de $X$ é no máximo $5$."
+  solutions[4] <- mx <= 5
+  explanations[4] <- paste0("A média de $X$ é igual a $", mx, 
+                           "$ e, portanto, é ", ifelse(mx < 5, "menor", "maior"), " do que $5$.")
+} else {
+  questions[4] <- "A média de $Y$ é pelo menos $30$."
+  solutions[4] <- my >= 30
+  explanations[4] <- paste0("A média de $Y$ é igual a $", my, 
+                           "$ e, portanto, é ", ifelse(my < 30, "menor", "maior"), " do que $30$.")
+}
+
+xh <- round(runif(1, -1, 1)*sx + mx, 1)
+yhr <- round(a + b*xh, 1)
+alpha <- if (abs(r) > 0 & abs(mx - xh) > 0) sign(mx - xh) * sign(r) else 1
+yhf <- round(yhr + 2 * sy * alpha, 1)
+yh <- sample(c(yhr, yhf), 1)
+questions[5] <- paste0("Para $X = ", as.character(xh), "$, $Y$ pode ser esperado ser aproximadamente $", 
+                      as.character(yh), "$.", collapse="")
+solutions[5] <- abs(yh - yhr) < 0.01 * sy
+explanations[5] <- paste0("A linha de regressão em $X=", xh, 
+                         "$ implica um valor de aproximadamente $Y = ", yhr, "$.", sep="")         
+           
+## permute order of solutions/questions
+o <- sample(1:5)
+questions <- questions[o]
+solutions <- solutions[o]
+explanations <- explanations[o]  
+```
+
+Question
+========
+
+A figura a seguir mostra um gráfico de dispersão. Quais das seguintes afirmações são corretas?
+\
+```{r scatterplot, echo = FALSE, results = "hide", fig.height = 5, fig.width = 6, fig.path = "", fig.cap = ""}
+plot(x, y)
+```
+
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(questions, markup = "markdown")
+```
+
+
+Solution
+========
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(ifelse(solutions, "Verdadeiro", "Falso"), explanations, markup = "markdown")
+```
+
+
+Meta-information
+================
+extype: mchoice
+exsolution: `r mchoice2string(solutions)`
+exname: gráfico de dispersão;;

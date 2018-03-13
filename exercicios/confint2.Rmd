@@ -1,0 +1,51 @@
+```{r data generation, echo = FALSE, results = "hide"}
+## DATA GENERATION
+n <- sample(50:150, 1)
+y <- rnorm(n, runif(1, 100, 200), runif(1, 10, 15))
+
+## QUESTION/ANSWER GENERATION
+Mean <- round(mean(y), digits = 1)
+Var <- round(var(y), digits = 1)
+sd <- sqrt(Var/n)
+LB <- round(Mean - 1.96*sd, 3)
+UB <- round(Mean + 1.96*sd, 3)
+```
+
+Question
+========
+
+As despesas diárias dos turistas de verão em Viena são analisadas. Uma pesquisa com $`r n`$  turistas é conduzida. Isso mostra que os turistas gastam em média $`r Mean`$ euros. A variância da amostra $s^2_{n-1}$ é igual a $`r Var`$.
+
+Determine um intervalo de confiança de $95\%$ para a despesa diária média (em euros) de um turista.
+
+Answerlist
+----------
+* Qual o valor do intervalo de confiança para baixo?
+* Qual o valor do intervalo de confiança para cima?
+
+Solution
+========
+
+O intervalo de confiança de $95\%$  para a despesa média $\mu$ é dada por:
+$$
+\begin{aligned}
+&   & \left[\bar{y} \, - \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}, \; 
+  \bar{y} \, + \, 1.96\sqrt{\frac{s_{n-1}^2}{n}}\right] \\
+& = & \left[ `r Mean` \, - \, 1.96\sqrt{\frac{`r Var`}{`r n`}}, \;
+             `r Mean` \, + \, 1.96\sqrt{\frac{`r Var`}{`r n`}}\right] \\
+& = & \left[`r LB`, \, `r UB`\right].
+\end{aligned}
+$$
+
+Answerlist
+----------
+* O valor do intervalo de confiança para baixo é $`r LB`$.
+* O valor do intervalo de confiança para cima é  $`r UB`$.
+
+Meta-information
+============
+extype: cloze
+exclozetype: num|num
+exsolution: `r LB`|`r UB`
+exname: Intervalo de confiança para a despesa diária média de um turista em Viena com 2 perguntas;;
+extol: 0.01

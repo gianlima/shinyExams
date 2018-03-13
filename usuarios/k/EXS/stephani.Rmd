@@ -1,0 +1,39 @@
+```{r data generation, echo = FALSE, results = "hide"}
+
+```
+
+Question
+========
+Qual é a sede das autoridades federais na Suíça (ou seja, a capital de fato)?
+
+Answerlist
+----------
+* Basileia
+* Berna
+* Geneva 
+* Lausana 
+* Zurique 
+* Sao Galo
+* Vaduz 
+
+Solution
+========
+yuyuyuyu
+
+Answerlist
+----------
+* Falso
+* Verdadeiro
+* Falso
+* Falso
+* Falso
+* Falso
+* Falso
+
+
+Meta-information
+================
+exname: hhhh;;
+extype: schoice
+exsolution: 0100000
+exshuffle: 5

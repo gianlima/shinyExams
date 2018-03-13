@@ -1,0 +1,27 @@
+```{r data generation, echo = FALSE, results = "hide"}
+SYM <- c(EUR = "€", USD = "$", GBP = "£")
+CURR <- c(EUR = 1, USD = 1.3109, GBP = 0.8431)
+ADIDAS <- 84.8492
+nr <- sample(10:100, 1)
+cu <- sample(names(CURR), 1)
+x <- round(nr * ADIDAS * CURR[cu], digits = 3)
+```
+
+Question
+========
+No dia 03/05/2003, 1 euro (`r SYM["EUR"]`) valia `r CURR["USD"]` dólares americanos (`r SYM["USD"]`) e
+`r CURR["GBP"]` libras (`r SYM["GBP"]`). Na Bolsa de Valores de Frankfurt, ao meio dia, adidas AG foi o maior vencedor comparado com o dia anterior com um preço de `r SYM["EUR"]` `r ADIDAS` por ação.
+Se você comprar `r nr` ações, quanto valem em `r SYM[cu]`?
+
+Solution
+========
+O valor em `r SYM[cu]` é o número de ações $\times$ preço das ações $\times$ taxa de câmbio,
+ex.:, $`r nr` \times `r ADIDAS` \times `r CURR[cu]` \approx `r x`$.
+
+Meta-information
+================
+extype: num
+exsolution: `r x`
+exname: Taxas de câmbio na Bolsa de Valores de Frankfurt;;
+extol: 0.01
+

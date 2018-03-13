@@ -1,0 +1,48 @@
+```{r data generation, echo = FALSE, results = "hide"}
+sc <- NULL
+while(is.null(sc)) {
+## parameters
+a <- sample(2:9, 1)
+b <- sample(seq(2, 4, 0.1), 1)
+c <- sample(seq(0.6, 0.9, 0.01), 1)
+## solution
+res <- exp(b * c) * (a * c^(a-1) + b * c^a)
+## schoice
+err <- c(a * c^(a-1) * exp(b * c), a * c^(a-1) * exp(b * c) + c^a * exp(b * c))
+rg <- if(res < 4) c(0.5, 5.5) else res * c(0.5, 1.5)
+sc <- num_to_schoice(res, wrong = err, range = rg, delta = 0.1)
+}
+```
+
+Question
+========
+Qual a derivada de $f(x) = x^{`r a`} e^{`r b` x}$, no ponto $x = `r c`$?
+
+```{r questionlist, echo = FALSE, results = "asis"}
+answerlist(sc$questions, markup = "markdown")
+```
+
+Solution
+========
+Usando a regra do produto para $f(x) = g(x) \cdot h(x)$, onde $g(x) := x^{`r a`}$ e $h(x) := e^{`r b` x}$, nós obtemos
+$$
+\begin{aligned}
+f'(x) &= [g(x) \cdot h(x)]' = g'(x) \cdot h(x) + g(x) \cdot h'(x) \\
+      &= `r a` x^{`r a` - 1} \cdot e^{`r b` x} + x^{`r a`} \cdot e^{`r b` x} \cdot `r b` \\
+      &= e^{`r b` x} \cdot(`r a` x^`r a-1` + `r b` x^{`r a`}) \\
+      &= e^{`r b` x} \cdot x^`r a-1` \cdot (`r a` + `r b` x).
+\end{aligned}
+$$
+No ponto $x = `r c`$, a resposta é
+$$ e^{`r b` \cdot `r c`} \cdot `r c`^`r a-1` \cdot (`r a` + `r b` \cdot `r c`) = `r fmt(res, 6)`. $$
+Assim, arredondado para dois dígitos, temos $f'(`r c`) = `r fmt(res)`$.
+
+```{r solutionlist, echo = FALSE, results = "asis"}
+answerlist(ifelse(sc$solutions, "True", "False"), markup = "markdown")
+```
+
+Meta-information
+================
+extype: schoice
+exsolution: `r mchoice2string(sc$solutions)`
+exname: derivada exponencial com opções de resposta;;

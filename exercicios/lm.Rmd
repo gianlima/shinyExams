@@ -1,0 +1,54 @@
+```{r data generation, echo = FALSE, results = "hide"}
+d <- data.frame(x = runif(100, -1, 1))
+a <- 0
+b <- sample(c(-1, 1), 1) * sample(c(0, 0.6, 0.9), 1)
+d$y <- a + b * d$x + rnorm(100, sd = 0.25)
+write.csv(d, "regression.csv", row.names = FALSE, quote = FALSE)
+
+m <- lm(y ~ x, data = d)
+bhat <- coef(m)[2]
+bpvl <- summary(m)$coefficients[2, 4]
+bsol <- c(bpvl >= 0.05, (bpvl < 0.05) & (bhat > 0), (bpvl < 0.05) & (bhat < 0))
+```    
+
+Question
+========
+Usando os dados fornecidos em [regression.csv](regression.csv), estime uma regressão linear de
+`y` em `x` e responda as seguintes perguntas.
+
+Answerlist
+----------
+  \item `x` e `y` não são significativamente correlacionados
+  \item `y` aumenta significativamente com `x`
+  \item `y` diminui significativamente com `x`
+  \item Inclinação estimada em relação a `x`:
+
+Solution
+========
+\
+```{r scatterplot, echo = FALSE, results = "hide", fig.height = 4.5, fig.width = 4.5, fig.path = "", fig.cap = ""}
+plot(y ~ x, data = d)
+abline(m)
+legend(if(bhat > 0) "topleft" else "topright", bty = "n",
+  paste0("b = ", fmt(bhat, 3), "\np = ", fmt(bpvl, 3)))
+```
+
+Para replicar a análise em R:
+```{r lm, results="hide", eval=FALSE}
+## data
+d <- read.csv("regression.csv")
+## regression
+m <- lm(y ~ x, data = d)
+summary(m)
+## visualization
+plot(y ~ x, data = d)
+abline(m)
+```
+
+Meta-information
+================
+exname: Regressão linear com dados de regression.csv envolvendo 2 perguntas;;
+extype: cloze
+exsolution: `r mchoice2string(bsol)`|`r fmt(bhat, 3)`
+exclozetype: schoice|num
+extol: 0.01
